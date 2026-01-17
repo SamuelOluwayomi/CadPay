@@ -29,9 +29,12 @@
     "@solana/client": "^1.2.0",
     "@solana/kit": "^5.1.0",
     "@solana/react-hooks": "^1.1.5",
+    "framer-motion": "^12.26.2",
     "next": "16.0.10",
+    "phosphor-react": "^1.4.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "tailwind-merge": "^3.4.0",
     "ws": "^8.18.3"
   },
   "devDependencies": {
