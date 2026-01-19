@@ -4,16 +4,17 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { List, X, Wallet, CaretRight } from "phosphor-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { useUser } from "@civic/auth/react";
 
-function cn(...inputs: ClassValue[]) {
-    return twMerge(clsx(inputs));
+function cn(...inputs: (string | undefined | null | false)[]) {
+    return twMerge(inputs.filter(Boolean).join(" "));
 }
 
 export function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const { signIn, user } = useUser();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -65,12 +66,23 @@ export function Navbar() {
                             ))}
                         </nav>
 
+
                         {/* Desktop Actions */}
                         <div className="hidden md:flex items-center gap-4">
-                            <button className="px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 text-white text-sm font-medium transition-all hover:scale-105 active:scale-95 flex items-center gap-2 backdrop-blur-sm">
-                                <Wallet className="w-4 h-4" weight="fill" />
-                                Connect Wallet
-                            </button>
+                            {!user ? (
+                                <button
+                                    onClick={() => signIn()}
+                                    className="px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 text-white text-sm font-medium transition-all hover:scale-105 active:scale-95 flex items-center gap-2 backdrop-blur-sm"
+                                >
+                                    <Wallet className="w-4 h-4" weight="fill" />
+                                    Create Account
+                                </button>
+                            ) : (
+                                <button className="px-5 py-2.5 rounded-full bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 text-blue-400 text-sm font-medium transition-all flex items-center gap-2 backdrop-blur-sm">
+                                    <Wallet className="w-4 h-4" weight="fill" />
+                                    Connected
+                                </button>
+                            )}
                         </div>
 
                         {/* Mobile Toggle */}
@@ -111,15 +123,28 @@ export function Navbar() {
                                     </Link>
                                 </motion.div>
                             ))}
-                            <motion.button
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.3 }}
-                                className="w-full mt-4 py-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-lg shadow-xl shadow-blue-600/20 flex items-center justify-center gap-2"
-                            >
-                                <Wallet size={20} weight="fill" />
-                                Connect Wallet
-                            </motion.button>
+                            {!user ? (
+                                <motion.button
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.3 }}
+                                    onClick={() => signIn()}
+                                    className="w-full mt-4 py-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-lg shadow-xl shadow-blue-600/20 flex items-center justify-center gap-2"
+                                >
+                                    <Wallet size={20} weight="fill" />
+                                    Create Account
+                                </motion.button>
+                            ) : (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.3 }}
+                                    className="w-full mt-4 py-4 rounded-xl bg-white/10 text-white font-bold text-lg flex items-center justify-center gap-2"
+                                >
+                                    <Wallet size={20} weight="fill" />
+                                    Connected
+                                </motion.div>
+                            )}
                         </nav>
                     </motion.div>
                 )}

@@ -26,9 +26,13 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
+    "@civic/auth": "^0.14.1",
+    "@coral-xyz/anchor": "^0.31.1",
+    "@lazorkit/wallet": "^2.0.1",
     "@solana/client": "^1.2.0",
     "@solana/kit": "^5.1.0",
     "@solana/react-hooks": "^1.1.5",
+    "@solana/web3.js": "^1.98.4",
     "framer-motion": "^12.26.2",
     "next": "16.0.10",
     "phosphor-react": "^1.4.1",
