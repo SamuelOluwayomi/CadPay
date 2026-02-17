@@ -1,118 +1,130 @@
 # CadPay
 
-Next.js starter with Tailwind CSS, `@solana/react-hooks`, and an Anchor vault program example.
+A modern Solana dApp starter featuring secure vault functionality, seamless wallet authentication, and a sleek, responsive UI. Built with the latest tech stack for speed and developer experience.
+
+## Features
+
+-   **Secure Authentication**: Integrated with `@civic/auth` for robust and user-friendly wallet connection.
+-   **Solana Vault**: Interact with a personal PDA (Program Derived Address) vault to securely deposit and withdraw SOL.
+-   **Responsive Design**: Crafted with [Tailwind CSS v4](https://tailwindcss.com/) and [Framer Motion](https://www.framer.com/motion/) for smooth animations and a premium look.
+-   **Type-Safe Client**: Auto-generated TypeScript client for the Anchor program using [Codama](https://github.com/codama-idl/codama).
+-   **Optimized Performance**: leveraging Next.js 16 and React 19 for the best possible user experience.
+
+## Tech Stack
+
+| Layer | Technology |
+| :--- | :--- |
+| **Frontend** | [Next.js 16](https://nextjs.org/), [React 19](https://react.dev/), [TypeScript](https://www.typescriptlang.org/) |
+| **Styling** | [Tailwind CSS v4](https://tailwindcss.com/) |
+| **Blockchain** | [Solana](https://solana.com/), [Anchor](https://www.anchor-lang.com/) |
+| **Auth** | [`@civic/auth`](https://docs.civic.com/) |
+| **SDKs** | [`@solana/web3.js`](https://solana-labs.github.io/solana-web3.js/), [`@solana/kit`](https://github.com/solana-foundation/framework-kit) |
 
 ## Getting Started
 
-```shell
-npx create-solana-dapp@latest -t kit/CadPay
-```
+Follow these steps to set up the project locally.
 
-```shell
-npm install   # Builds program and generates client automatically
-npm run dev
-```
+### Prerequisites
 
-Open [http://localhost:3000](http://localhost:3000), connect your wallet, and interact with the vault on devnet.
+Ensure you have the following installed:
 
-## What's Included
+-   [Node.js](https://nodejs.org/) (Project uses v20+)
+-   [Rust](https://rustup.rs/)
+-   [Solana CLI](https://solana.com/docs/intro/installation)
+-   [Anchor CLI](https://www.anchor-lang.com/docs/installation)
 
-- **Wallet connection** via `@solana/react-hooks` with auto-discovery
-- **SOL Vault program** - deposit and withdraw SOL from a personal PDA vault
-- **Codama-generated client** - type-safe program interactions using `@solana/kit`
-- **Tailwind CSS v4** with light/dark mode
+### Installation
 
-## Stack
+1.  **Clone the repository:**
 
-| Layer          | Technology                              |
-| -------------- | --------------------------------------- |
-| Frontend       | Next.js 16, React 19, TypeScript        |
-| Styling        | Tailwind CSS v4                         |
-| Solana Client  | `@solana/client`, `@solana/react-hooks` |
-| Program Client | Codama-generated, `@solana/kit`         |
-| Program        | Anchor (Rust)                           |
+    ```bash
+    git clone https://github.com/SamuelOluwayomi/CadPay.git
+    cd CadPay
+    ```
+
+2.  **Install dependencies:**
+
+    ```bash
+    npm install
+    ```
+
+3.  **Build the Anchor program:**
+
+    ```bash
+    npm run anchor-build
+    ```
+
+4.  **Generate the client:**
+
+    ```bash
+    npm run codama:js
+    ```
+
+    *Alternatively, run `npm run setup` to do both steps.*
+
+5.  **Start the development server:**
+
+    ```bash
+    npm run dev
+    ```
+
+    Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## Project Structure
 
 ```
 ├── app/
-│   ├── components/
-│   │   ├── providers.tsx      # Solana client setup
-│   │   └── vault-card.tsx     # Vault deposit/withdraw UI
-│   ├── generated/vault/       # Codama-generated program client
-│   └── page.tsx               # Main page
-├── anchor/                    # Anchor workspace
-│   └── programs/vault/        # Vault program (Rust)
-└── codama.json                # Codama client generation config
+│   ├── components/        # Reusable UI components (Navbar, VaultCard, etc.)
+│   ├── generated/         # Codama-generated Solana program client
+│   └── page.tsx           # Main application page
+├── anchor/                # Anchor workspace
+│   └── programs/vault/    # Rust smart contract source code
+├── public/                # Static assets
+└── ...config files
 ```
 
-## Deploy Your Own Vault
+## Deploying Your Own Vault
 
-The included vault program is already deployed to devnet. To deploy your own:
+The project comes with a pre-configured vault program. To deploy your own instance to Devnet:
 
-### Prerequisites
-
-- [Rust](https://rustup.rs/)
-- [Solana CLI](https://solana.com/docs/intro/installation)
-- [Anchor](https://www.anchor-lang.com/docs/installation)
-
-### Steps
-
-1. **Configure Solana CLI for devnet**
-
-   ```bash
-   solana config set --url devnet
-   ```
-
-2. **Create a wallet (if needed) and fund it**
-
-   ```bash
-   solana-keygen new
-   solana airdrop 2
-   ```
-
-3. **Build and deploy the program**
-
-   ```bash
-   cd anchor
-   anchor build
-   anchor keys sync    # Updates program ID in source
-   anchor build        # Rebuild with new ID
-   anchor deploy
-   cd ..
-   ```
-
-4. **Regenerate the client and restart**
-   ```bash
-   npm run setup   # Rebuilds program and regenerates client
-   npm run dev
-   ```
+1.  **Configure Solana CLI:**
+    ```bash
+    solana config set --url devnet
+    ```
+2.  **Create a new wallet (if needed):**
+    ```bash
+    solana-keygen new
+    ```
+3.  **Airdrop SOL for deployment:**
+    ```bash
+    solana airdrop 2
+    ```
+4.  **Build and deploy:**
+    ```bash
+    cd anchor
+    anchor build
+    anchor keys sync
+    anchor build
+    anchor deploy
+    ```
+5.  **Update Client:**
+    After deployment, ensure your updated program ID is reflected in the client by running:
+    ```bash
+    npm run codama:js
+    ```
 
 ## Testing
 
-Tests use [LiteSVM](https://github.com/LiteSVM/litesvm), a fast lightweight Solana VM for testing.
+Run the Anchor tests using:
 
 ```bash
-npm run anchor-build   # Build the program first
-npm run anchor-test    # Run tests
+npm run anchor-test
 ```
 
-The tests are in `anchor/programs/vault/src/tests.rs` and automatically use the program ID from `declare_id!`.
-
-## Regenerating the Client
-
-If you modify the program, regenerate the TypeScript client:
-
-```bash
-npm run setup   # Or: npm run anchor-build && npm run codama:js
-```
-
-This uses [Codama](https://github.com/codama-idl/codama) to generate a type-safe client from the Anchor IDL.
+This uses [LiteSVM](https://github.com/LiteSVM/litesvm) for fast, lightweight testing of your Solana program.
 
 ## Learn More
 
-- [Solana Docs](https://solana.com/docs) - core concepts and guides
-- [Anchor Docs](https://www.anchor-lang.com/docs) - program development framework
-- [Deploying Programs](https://solana.com/docs/programs/deploying) - deployment guide
-- [framework-kit](https://github.com/solana-foundation/framework-kit) - the React hooks used here
-- [Codama](https://github.com/codama-idl/codama) - client generation from IDL
+-   [Solana Documentation](https://solana.com/docs)
+-   [Anchor Documentation](https://www.anchor-lang.com/docs)
+-   [Next.js Documentation](https://nextjs.org/docs)
